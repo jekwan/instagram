@@ -13,7 +13,6 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-//    여기 nullable이 DB의 NOT NULL을 의미? @NotNull과는 무슨 차이?
     @Column(name = "name", length = 30, nullable = false)
     private String name;
 
