@@ -25,7 +25,7 @@ public class AuthService {
         }
 
         String hashedPassword = BCrypt.hashpw(userRegistrationDto.getPassword(), BCrypt.gensalt());
-        User user = new User(userRegistrationDto.getEmail(), userRegistrationDto.getPassword(), hashedPassword);
+        User user = new User(userRegistrationDto.getName(), userRegistrationDto.getEmail(), hashedPassword);
         User savedUser = userRepository.save(user);
 
         return new UserResponseDto(
