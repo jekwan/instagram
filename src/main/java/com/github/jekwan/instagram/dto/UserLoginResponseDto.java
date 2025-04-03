@@ -1,17 +1,13 @@
 package com.github.jekwan.instagram.dto;
 
-public class UserRegistrationDto {
+public class UserLoginResponseDto {
     private String name;
     private String email;
-    private String password;
 
-    public UserRegistrationDto() {
-    }
-
-    public UserRegistrationDto(String name, String email, String password) {
+    public UserLoginResponseDto() { }
+    public UserLoginResponseDto(String name, String email) {
         this.name = name;
         this.email = email;
-        this.password = password;
     }
 
     public String getName() {
@@ -28,13 +24,5 @@ public class UserRegistrationDto {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 }

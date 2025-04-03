@@ -1,8 +1,6 @@
 package com.github.jekwan.instagram.controller;
 
-import com.github.jekwan.instagram.dto.UserLoginDto;
-import com.github.jekwan.instagram.dto.UserRegistrationDto;
-import com.github.jekwan.instagram.dto.UserResponseDto;
+import com.github.jekwan.instagram.dto.*;
 import com.github.jekwan.instagram.service.AuthService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.http.HttpStatus;
@@ -23,21 +21,27 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<UserResponseDto> register(@RequestBody UserRegistrationDto userRegistrationDto) {
-        UserResponseDto userResponseDto = authService.registerUser(userRegistrationDto);
-        return new ResponseEntity<>(userResponseDto, HttpStatus.CREATED);
+    public ResponseEntity<ApiResponse<UserRegisterResponseDto>> register(@RequestBody UserRegisterRequestDto userRegisterRequestDto) {
+        UserRegisterResponseDto userRegisterResponseDto = authService.registerUser(userRegisterRequestDto);
+
+        ApiResponse<UserRegisterResponseDto> response = new ApiResponse<>(200, userRegisterResponseDto, null);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<UserResponseDto> login(@RequestBody UserLoginDto userLoginDto, HttpSession session) {
-        UserResponseDto userResponseDto = authService.loginUser(userLoginDto);
-        session.setAttribute("user", userResponseDto);
-        return ResponseEntity.ok(userResponseDto);
+    public ResponseEntity<ApiResponse<UserLoginResponseDto>> login(@RequestBody UserLoginRequestDto userLoginRequestDto, HttpSession session) {
+        UserLoginResponseDto userLoginResponseDto = authService.loginUser(userLoginRequestDto);
+        session.setAttribute("user", userLoginResponseDto);
+
+        ApiResponse<UserLoginResponseDto> response = new ApiResponse<>(200, userLoginResponseDto, null);
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<String> logout(HttpSession session) {
+    public ResponseEntity<ApiResponse<String>> logout(HttpSession session) {
         session.invalidate();
-        return ResponseEntity.ok("logout");
+
+        ApiResponse<String> response = new ApiResponse<>(200, "logout", null);
+        return ResponseEntity.ok(response);
     }
 }

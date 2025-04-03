@@ -1,8 +1,6 @@
 package com.github.jekwan.instagram.service;
 
-import com.github.jekwan.instagram.dto.UserLoginDto;
-import com.github.jekwan.instagram.dto.UserRegistrationDto;
-import com.github.jekwan.instagram.dto.UserResponseDto;
+import com.github.jekwan.instagram.dto.*;
 import com.github.jekwan.instagram.entity.User;
 import com.github.jekwan.instagram.repository.UserRepository;
 import org.mindrot.jbcrypt.BCrypt;
@@ -18,33 +16,34 @@ public class AuthService {
         this.userRepository = userRepository;
     }
 
-    public UserResponseDto registerUser(UserRegistrationDto userRegistrationDto) {
-        Optional<User> existingUser = userRepository.findByEmail(userRegistrationDto.getEmail());
+    public UserRegisterResponseDto registerUser(UserRegisterRequestDto userRegisterRequestDto) {
+        Optional<User> existingUser = userRepository.findByEmail(userRegisterRequestDto.getEmail());
         if (existingUser.isPresent()) {
             throw new RuntimeException("User already exists");
         }
 
-        String hashedPassword = BCrypt.hashpw(userRegistrationDto.getPassword(), BCrypt.gensalt());
-        User user = new User(userRegistrationDto.getName(), userRegistrationDto.getEmail(), hashedPassword);
+        String hashedPassword = BCrypt.hashpw(userRegisterRequestDto.getPassword(), BCrypt.gensalt());
+        User user = new User(userRegisterRequestDto.getName(), userRegisterRequestDto.getEmail(), hashedPassword);
         User savedUser = userRepository.save(user);
 
-        return new UserResponseDto(
-                savedUser.getId(),
+        return new UserRegisterResponseDto(
                 savedUser.getName(),
-                savedUser.getEmail(),
-                savedUser.getCreatedAt()
+                savedUser.getEmail()
         );
     }
 
-    public UserResponseDto loginUser(UserLoginDto userLoginDto) {
-        Optional<User> existingUser = userRepository.findByEmail(userLoginDto.getEmail());
+    public UserLoginResponseDto loginUser(UserLoginRequestDto userLoginRequestDto) {
+        Optional<User> existingUser = userRepository.findByEmail(userLoginRequestDto.getEmail());
         if (existingUser.isEmpty()) {
             throw new RuntimeException("User not found");
         }
 
         User user = existingUser.get();
-        if (BCrypt.checkpw(userLoginDto.getPassword(), user.getPasswordHash())) {
-            return new UserResponseDto(user.getId(), user.getName(), user.getEmail(), user.getCreatedAt());
+        if (BCrypt.checkpw(userLoginRequestDto.getPassword(), user.getPasswordHash())) {
+            return new UserLoginResponseDto(
+                    user.getName(),
+                    user.getEmail()
+            );
         } else {
             throw new RuntimeException("Incorrect password");
         }

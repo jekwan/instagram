@@ -1,11 +1,11 @@
 package com.github.jekwan.instagram.dto;
 
-public class UserLoginDto {
+public class UserLoginRequestDto {
     private String email;
     private String password;
 
-    public UserLoginDto() {}
-    public UserLoginDto(String email, String password) {
+    public UserLoginRequestDto() {}
+    public UserLoginRequestDto(String email, String password) {
         this.email = email;
         this.password = password;
     }
