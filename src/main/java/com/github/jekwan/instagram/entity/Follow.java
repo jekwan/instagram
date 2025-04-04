@@ -1,9 +1,6 @@
 package com.github.jekwan.instagram.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.EmbeddedId;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 import java.time.OffsetDateTime;
 
@@ -13,6 +10,16 @@ public class Follow {
 
     @EmbeddedId
     private FollowId id;
+
+    @ManyToOne
+    @MapsId("followerId")
+    @JoinColumn(name = "follower_id")
+    private User follower;
+
+    @ManyToOne
+    @MapsId("followeeId")
+    @JoinColumn(name = "followee_id")
+    private User followee;
 
     @Column(name = "created_at", nullable = false)
     private OffsetDateTime createdAt;
