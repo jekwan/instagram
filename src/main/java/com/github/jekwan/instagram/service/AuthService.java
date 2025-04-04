@@ -10,6 +10,7 @@ import java.util.Optional;
 
 @Service
 public class AuthService {
+
     private final UserRepository userRepository;
 
     public AuthService(UserRepository userRepository) {
