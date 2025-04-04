@@ -5,9 +5,11 @@ import com.github.jekwan.instagram.dto.PostMediaResponseDto;
 import com.github.jekwan.instagram.dto.PostResponseDto;
 import com.github.jekwan.instagram.entity.Post;
 import com.github.jekwan.instagram.entity.PostMedia;
+import com.github.jekwan.instagram.entity.User;
 import com.github.jekwan.instagram.exception.ResourceNotFoundException;
 import com.github.jekwan.instagram.repository.PostMediaRepository;
 import com.github.jekwan.instagram.repository.PostRepository;
+import com.github.jekwan.instagram.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -19,15 +21,24 @@ public class PostService {
 
     private final PostRepository postRepository;
     private final PostMediaRepository postMediaRepository;
+    private final UserRepository userRepository;
 
-    public PostService(PostRepository postRepository, PostMediaRepository postMediaRepository) {
+    public PostService(PostRepository postRepository, PostMediaRepository postMediaRepository, UserRepository userRepository) {
         this.postRepository = postRepository;
         this.postMediaRepository = postMediaRepository;
+        this.userRepository = userRepository;
     }
 
     @Transactional
     public Long createPost(PostCreateRequestDto postCreateRequestDto) {
-        Post createdPost = postRepository.save(new Post(postCreateRequestDto.getTitle(), postCreateRequestDto.getContents()));
+        User user = userRepository
+                .findById(postCreateRequestDto.getUserId())
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+        Post post = new Post(postCreateRequestDto.getTitle(), postCreateRequestDto.getContents());
+        post.setUser(user);
+
+        Post createdPost = postRepository.save(post);
 
         List<PostMedia> media = postCreateRequestDto
                 .getMedia()
