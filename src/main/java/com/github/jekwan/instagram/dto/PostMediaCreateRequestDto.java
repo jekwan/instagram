@@ -5,7 +5,6 @@ public class PostMediaCreateRequestDto {
     private String mediaUrl;
     private int sortOrder;
 
-    public PostMediaCreateRequestDto() {}
     public PostMediaCreateRequestDto(String mediaType, String mediaUrl, int sortOrder) {
         this.mediaType = mediaType;
         this.mediaUrl = mediaUrl;

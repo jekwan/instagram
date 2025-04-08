@@ -30,24 +30,34 @@ public class PostService {
     }
 
     @Transactional
-    public Long createPost(PostCreateRequestDto postCreateRequestDto) {
+    public PostResponseDto createPost(PostCreateRequestDto postCreateRequestDto) {
         User user = userRepository
                 .findById(postCreateRequestDto.getUserId())
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
         Post post = new Post(postCreateRequestDto.getTitle(), postCreateRequestDto.getContents());
         post.setUser(user);
-
-        Post createdPost = postRepository.save(post);
+        Post savedPost = postRepository.save(post);
 
         List<PostMedia> media = postCreateRequestDto
                 .getMedia()
                 .stream()
-                .map(mediaDto -> new PostMedia(createdPost, mediaDto.getMediaType(), mediaDto.getMediaUrl(), mediaDto.getSortOrder()))
+                .map(mediaDto -> new PostMedia(savedPost, mediaDto.getMediaType(), mediaDto.getMediaUrl(), mediaDto.getSortOrder()))
                 .collect(Collectors.toList());
+        List<PostMedia> savedMedia =  postMediaRepository.saveAll(media);
 
-        postMediaRepository.saveAll(media);
-        return createdPost.getId();
+        return new PostResponseDto(
+                savedPost.getUser().getName(),
+                savedPost.getTitle(),
+                savedPost.getContents(),
+                savedPost.getCreatedAt(),
+                savedPost.getUpdatedAt(),
+                savedMedia.stream()
+                        .map(m -> new PostMediaResponseDto(
+                                m.getMediaType(),
+                                m.getMediaUrl(),
+                                m.getSortOrder())).collect(Collectors.toUnmodifiableList())
+        );
     }
 
     public Post updatePost(Long id, Post updatedPost) {
@@ -68,7 +78,7 @@ public class PostService {
                 .stream()
                 .map(m -> new PostMediaResponseDto(m.getMediaType(), m.getMediaUrl(), m.getSortOrder())).collect(Collectors.toList());
 
-        return new PostResponseDto(post.getUser().getId(), post.getTitle(), post.getContents(), post.getCreatedAt(), post.getUpdatedAt(), media);
+        return new PostResponseDto(post.getUser().getName(), post.getTitle(), post.getContents(), post.getCreatedAt(), post.getUpdatedAt(), media);
     }
 
     public void deletePost(Long id) {

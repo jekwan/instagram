@@ -7,7 +7,6 @@ import com.github.jekwan.instagram.repository.FollowRepository;
 import com.github.jekwan.instagram.repository.PostRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,19 +22,11 @@ public class NewsfeedService {
     }
 
     public List<PostResponseDto> getNewsfeed(Long userId) {
-//        List<Long> followeeUserIds = followRepository.findFolloweeIdsByFollowerId(userId);
-
-//        if (followeeUserIds.isEmpty()) {
-//            return Collections.emptyList();
-//        }
-
-//        List<Post> posts = postRepository.findPostsByUserIds(followeeUserIds);
-//        List<Post> posts = postRepository.findPostsWithMediaByUserIds(followeeUserIds);
         List<Post> posts = postRepository.findNewsFeedByFollowerId(userId);
         return posts
                 .stream()
                 .map(post -> new PostResponseDto(
-                        post.getUser().getId(),
+                        post.getUser().getName(),
                         post.getTitle(),
                         post.getContents(),
                         post.getCreatedAt(),

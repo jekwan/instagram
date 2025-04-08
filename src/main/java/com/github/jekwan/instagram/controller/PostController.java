@@ -16,10 +16,9 @@ public class PostController {
     }
 
     @PostMapping
-    public ResponseEntity<ApiResponse<PostCreateResponseDto>> createPost(@RequestBody PostCreateRequestDto postCreateRequestDto) {
-        Long createdPostId = postService.createPost(postCreateRequestDto);
-        PostCreateResponseDto postCreateResponseDto = new PostCreateResponseDto(createdPostId);
-        ApiResponse<PostCreateResponseDto> response = new ApiResponse<>(200, postCreateResponseDto, null);
+    public ResponseEntity<ApiResponse<PostResponseDto>> createPost(@RequestBody PostCreateRequestDto postCreateRequestDto) {
+        PostResponseDto postResponseDto = postService.createPost(postCreateRequestDto);
+        ApiResponse<PostResponseDto> response = new ApiResponse<>(200, postResponseDto, null);
         return ResponseEntity.ok(response);
     }
 

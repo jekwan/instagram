@@ -4,15 +4,15 @@ import java.time.OffsetDateTime;
 import java.util.List;
 
 public class PostResponseDto {
-    private Long userId;
+    private String userName;
     private String title;
     private String contents;
     private OffsetDateTime createdAt;
     private OffsetDateTime updatedAt;
     private List<PostMediaResponseDto> media;
 
-    public PostResponseDto(Long userId, String title, String contents, OffsetDateTime createdAt, OffsetDateTime updatedAt, List<PostMediaResponseDto> media) {
-        this.userId = userId;
+    public PostResponseDto(String userName, String title, String contents, OffsetDateTime createdAt, OffsetDateTime updatedAt, List<PostMediaResponseDto> media) {
+        this.userName = userName;
         this.title = title;
         this.contents = contents;
         this.createdAt = createdAt;
@@ -20,12 +20,12 @@ public class PostResponseDto {
         this.media = media;
     }
 
-    public Long getUserId() {
-        return userId;
+    public String getUserName() {
+        return userName;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     public String getTitle() {

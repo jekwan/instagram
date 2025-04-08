@@ -1,8 +1,5 @@
 package com.github.jekwan.instagram.dto;
 
-import com.github.jekwan.instagram.entity.Post;
-import jakarta.persistence.*;
-
 public class PostMediaResponseDto {
     private String mediaType;
     private String mediaUrl;

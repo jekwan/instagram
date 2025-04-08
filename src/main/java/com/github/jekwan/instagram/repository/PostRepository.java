@@ -17,7 +17,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     List<Post> findPostsWithMediaByUserIds(List<Long> userIds);
 
     @Query("SELECT DISTINCT p " +
-            "FROM Post p LEFT JOIN FETCH p.mediaList " +
+            "FROM Post p LEFT JOIN FETCH p.mediaList JOIN FETCH p.user " +
             "WHERE p.user.id IN (SELECT f.followee.id FROM Follow f WHERE f.follower.id = :followerId) " +
             "ORDER BY p.createdAt DESC")
     List<Post> findNewsFeedByFollowerId(Long followerId);
