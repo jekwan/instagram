@@ -24,6 +24,14 @@ public class Follow {
     @Column(name = "created_at", nullable = false)
     private OffsetDateTime createdAt;
 
+    @PrePersist
+    public void prePersist() {
+        OffsetDateTime now = OffsetDateTime.now();
+        if (createdAt == null) {
+            createdAt = now;
+        };
+    }
+
     public Follow() {}
     public Follow(FollowId id) {
         this.id = id;
@@ -35,6 +43,22 @@ public class Follow {
 
     public void setId(FollowId id) {
         this.id = id;
+    }
+
+    public User getFollower() {
+        return follower;
+    }
+
+    public void setFollower(User follower) {
+        this.follower = follower;
+    }
+
+    public User getFollowee() {
+        return followee;
+    }
+
+    public void setFollowee(User followee) {
+        this.followee = followee;
     }
 
     public OffsetDateTime getCreatedAt() {
