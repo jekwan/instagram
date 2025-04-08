@@ -21,19 +21,19 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<ApiResponse<UserRegisterResponseDto>> register(@RequestBody UserRegisterRequestDto userRegisterRequestDto) {
-        UserRegisterResponseDto userRegisterResponseDto = authService.registerUser(userRegisterRequestDto);
+    public ResponseEntity<ApiResponse<UserResponseDto>> register(@RequestBody UserRegisterRequestDto userRegisterRequestDto) {
+        UserResponseDto userResponseDto = authService.registerUser(userRegisterRequestDto);
 
-        ApiResponse<UserRegisterResponseDto> response = new ApiResponse<>(200, userRegisterResponseDto, null);
+        ApiResponse<UserResponseDto> response = new ApiResponse<>(200, userResponseDto, null);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<ApiResponse<UserLoginResponseDto>> login(@RequestBody UserLoginRequestDto userLoginRequestDto, HttpSession session) {
-        UserLoginResponseDto userLoginResponseDto = authService.loginUser(userLoginRequestDto);
-        session.setAttribute("user", userLoginResponseDto);
+    public ResponseEntity<ApiResponse<UserResponseDto>> login(@RequestBody UserLoginRequestDto userLoginRequestDto, HttpSession session) {
+        UserResponseDto userResponseDto = authService.loginUser(userLoginRequestDto);
+        session.setAttribute("user", userResponseDto);
 
-        ApiResponse<UserLoginResponseDto> response = new ApiResponse<>(200, userLoginResponseDto, null);
+        ApiResponse<UserResponseDto> response = new ApiResponse<>(200, userResponseDto, null);
         return ResponseEntity.ok(response);
     }
 

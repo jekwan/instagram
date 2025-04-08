@@ -1,12 +1,13 @@
 package com.github.jekwan.instagram.service;
 
+import com.github.jekwan.instagram.dto.UserResponseDto;
 import com.github.jekwan.instagram.entity.User;
 import com.github.jekwan.instagram.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -17,24 +18,36 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
+    public List<UserResponseDto> getAllUsers() {
+        List<User> users = userRepository.findAll();
+        return users.stream()
+                .map(user -> new UserResponseDto(user.getName(), user.getEmail()))
+                .collect(Collectors.toUnmodifiableList());
     }
 
-    public Optional<User> getUserById(Long id) {
-        return userRepository.findById(id);
+    public Optional<UserResponseDto> getUserById(Long id) {
+        Optional<User> user = userRepository.findById(id);
+
+        if (user.isPresent()) {
+            return Optional.of(new UserResponseDto(user.get().getName(), user.get().getEmail()));
+        }
+
+        return Optional.empty();
     }
 
-    public User saveUser(User user) {
-        return userRepository.save(user);
+    public UserResponseDto saveUser(User user) {
+        User savedUser = userRepository.save(user);
+        return new UserResponseDto(savedUser.getName(), savedUser.getEmail());
     }
 
-    public Optional<User> updateUser(Long id, User newUserData) {
-        return userRepository.findById(id).map(user -> {
-            user.setName(newUserData.getName());
-            user.setEmail(newUserData.getEmail());
-            return userRepository.save(user);
-        });
+    public Optional<UserResponseDto> updateUser(Long id, User newUserData) {
+        Optional<User> user = userRepository.findById(id);
+        if (user.isPresent()) {
+            User savedUser = userRepository.save(newUserData);
+            return Optional.of(new UserResponseDto(savedUser.getName(), savedUser.getEmail()));
+        }
+
+        return Optional.empty();
     }
 
     public boolean deleteUser(Long id) {

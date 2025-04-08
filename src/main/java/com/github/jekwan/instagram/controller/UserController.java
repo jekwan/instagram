@@ -1,5 +1,6 @@
 package com.github.jekwan.instagram.controller;
 
+import com.github.jekwan.instagram.dto.UserResponseDto;
 import com.github.jekwan.instagram.entity.User;
 import com.github.jekwan.instagram.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,20 +21,21 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<User> createUser(@RequestBody User user) {
-        User created = userService.saveUser(user);
+    public ResponseEntity<UserResponseDto> createUser(@RequestBody User user) {
+        UserResponseDto created = userService.saveUser(user);
         return ResponseEntity.ok(created);
     }
 
     @GetMapping
-    public ResponseEntity<List<User>> getAllUsers() {
-        List<User> users = userService.getAllUsers();
+    public ResponseEntity<List<UserResponseDto>> getAllUsers() {
+        List<UserResponseDto> users = userService.getAllUsers();
         return ResponseEntity.ok(users);
     }
 
+
     @GetMapping("/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable Long id) {
-        Optional<User> user = userService.getUserById(id);
+    public ResponseEntity<UserResponseDto> getUserById(@PathVariable Long id) {
+        Optional<UserResponseDto> user = userService.getUserById(id);
         return user.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 

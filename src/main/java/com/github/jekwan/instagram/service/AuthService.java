@@ -17,7 +17,7 @@ public class AuthService {
         this.userRepository = userRepository;
     }
 
-    public UserRegisterResponseDto registerUser(UserRegisterRequestDto userRegisterRequestDto) {
+    public UserResponseDto registerUser(UserRegisterRequestDto userRegisterRequestDto) {
         Optional<User> existingUser = userRepository.findByEmail(userRegisterRequestDto.getEmail());
         if (existingUser.isPresent()) {
             throw new RuntimeException("User already exists");
@@ -27,13 +27,13 @@ public class AuthService {
         User user = new User(userRegisterRequestDto.getName(), userRegisterRequestDto.getEmail(), hashedPassword);
         User savedUser = userRepository.save(user);
 
-        return new UserRegisterResponseDto(
+        return new UserResponseDto(
                 savedUser.getName(),
                 savedUser.getEmail()
         );
     }
 
-    public UserLoginResponseDto loginUser(UserLoginRequestDto userLoginRequestDto) {
+    public UserResponseDto loginUser(UserLoginRequestDto userLoginRequestDto) {
         Optional<User> existingUser = userRepository.findByEmail(userLoginRequestDto.getEmail());
         if (existingUser.isEmpty()) {
             throw new RuntimeException("User not found");
@@ -41,7 +41,7 @@ public class AuthService {
 
         User user = existingUser.get();
         if (BCrypt.checkpw(userLoginRequestDto.getPassword(), user.getPasswordHash())) {
-            return new UserLoginResponseDto(
+            return new UserResponseDto(
                     user.getName(),
                     user.getEmail()
             );
