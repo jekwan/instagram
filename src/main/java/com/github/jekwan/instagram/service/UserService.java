@@ -21,7 +21,7 @@ public class UserService {
     public List<UserResponseDto> getAllUsers() {
         List<User> users = userRepository.findAll();
         return users.stream()
-                .map(user -> new UserResponseDto(user.getName(), user.getEmail()))
+                .map(user -> new UserResponseDto(user.getId(), user.getName(), user.getEmail()))
                 .collect(Collectors.toUnmodifiableList());
     }
 
@@ -29,7 +29,7 @@ public class UserService {
         Optional<User> user = userRepository.findById(id);
 
         if (user.isPresent()) {
-            return Optional.of(new UserResponseDto(user.get().getName(), user.get().getEmail()));
+            return Optional.of(new UserResponseDto(user.get().getId(), user.get().getName(), user.get().getEmail()));
         }
 
         return Optional.empty();
@@ -37,14 +37,14 @@ public class UserService {
 
     public UserResponseDto saveUser(User user) {
         User savedUser = userRepository.save(user);
-        return new UserResponseDto(savedUser.getName(), savedUser.getEmail());
+        return new UserResponseDto(savedUser.getId(), savedUser.getName(), savedUser.getEmail());
     }
 
     public Optional<UserResponseDto> updateUser(Long id, User newUserData) {
         Optional<User> user = userRepository.findById(id);
         if (user.isPresent()) {
             User savedUser = userRepository.save(newUserData);
-            return Optional.of(new UserResponseDto(savedUser.getName(), savedUser.getEmail()));
+            return Optional.of(new UserResponseDto(savedUser.getId(), savedUser.getName(), savedUser.getEmail()));
         }
 
         return Optional.empty();
