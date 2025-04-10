@@ -2,7 +2,9 @@ package com.github.jekwan.instagram.controller;
 
 import com.github.jekwan.instagram.dto.ApiResponse;
 import com.github.jekwan.instagram.dto.PostResponseDto;
+import com.github.jekwan.instagram.dto.UserResponseDto;
 import com.github.jekwan.instagram.service.NewsfeedService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,9 +24,15 @@ public class NewsfeedController {
         this.newsfeedService = newsfeedService;
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse<List<PostResponseDto>>> getNewsfeed(@PathVariable Long id) {
-        List<PostResponseDto> posts = newsfeedService.getNewsfeed(id);
+    @GetMapping
+    public ResponseEntity<ApiResponse<List<PostResponseDto>>> getNewsfeed(HttpSession session) {
+        UserResponseDto user = (UserResponseDto)session.getAttribute("user");
+
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        List<PostResponseDto> posts = newsfeedService.getNewsfeed(user.getId());
         ApiResponse<List<PostResponseDto>> response = new ApiResponse<>(200, posts, null);
         return ResponseEntity.ok(response);
     }

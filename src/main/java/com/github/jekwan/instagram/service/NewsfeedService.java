@@ -3,7 +3,6 @@ package com.github.jekwan.instagram.service;
 import com.github.jekwan.instagram.dto.PostMediaResponseDto;
 import com.github.jekwan.instagram.dto.PostResponseDto;
 import com.github.jekwan.instagram.entity.Post;
-import com.github.jekwan.instagram.repository.FollowRepository;
 import com.github.jekwan.instagram.repository.PostRepository;
 import org.springframework.stereotype.Service;
 
@@ -13,16 +12,15 @@ import java.util.stream.Collectors;
 @Service
 public class NewsfeedService {
 
-    private final FollowRepository followRepository;
     private final PostRepository postRepository;
 
-    public NewsfeedService(FollowRepository followRepository, PostRepository postRepository) {
-        this.followRepository = followRepository;
+    public NewsfeedService(PostRepository postRepository) {
         this.postRepository = postRepository;
     }
 
     public List<PostResponseDto> getNewsfeed(Long userId) {
         List<Post> posts = postRepository.findNewsFeedByFollowerId(userId);
+
         return posts
                 .stream()
                 .map(post -> new PostResponseDto(
