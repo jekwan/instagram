@@ -28,6 +28,7 @@ public class AuthService {
         User savedUser = userRepository.save(user);
 
         return new UserResponseDto(
+                savedUser.getId(),
                 savedUser.getName(),
                 savedUser.getEmail()
         );
@@ -42,6 +43,7 @@ public class AuthService {
         User user = existingUser.get();
         if (BCrypt.checkpw(userLoginRequestDto.getPassword(), user.getPasswordHash())) {
             return new UserResponseDto(
+                    user.getId(),
                     user.getName(),
                     user.getEmail()
             );

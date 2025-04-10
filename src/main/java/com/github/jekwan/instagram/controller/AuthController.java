@@ -5,10 +5,7 @@ import com.github.jekwan.instagram.service.AuthService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -42,6 +39,18 @@ public class AuthController {
         session.invalidate();
 
         ApiResponse<String> response = new ApiResponse<>(200, "logout", null);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<ApiResponse<UserResponseDto>> me(HttpSession session) {
+        UserResponseDto user = (UserResponseDto)session.getAttribute("user");
+        
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        ApiResponse<UserResponseDto> response = new ApiResponse<>(200, user, null);
         return ResponseEntity.ok(response);
     }
 }
