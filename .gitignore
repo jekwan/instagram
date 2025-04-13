@@ -38,3 +38,6 @@ out/
 
 ### ENV ###
 **/application-local.properties
+
+# GCP credentials
+src/main/resources/gcp-key.json
